@@ -49,3 +49,36 @@ root to: 'welcome#home'
 get 'about', to: 'welcome#about'
 * check currently updated routes with: rails routes
 * update the link settings in Home and About page templates accordingly
+
+## Apply version control
+* check the installed git: "git --version" and "git config --list"
+* use following code to config git if not done before:
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourcompany.com"
+* rails v5 creates projects with a Git repo by default, no need to: git init
+* check current repo status with: git status
+* start to track all files with: git add -A
+* check current repo status and confirm all files are tracked: git status
+* commit with some comment: git commit -m "some comment"
+* check repo status to confirm the commit is done: git status
+* demo an accident of deletion: rm -rf config
+* check current repo status after deletion: git status
+* recover deleted file with: git checkout -f
+* check repo status after recovery with: git status
+
+## Use online collaboration repo
+* prepare a GitHub or a Bitbucket account, we use GitHub from here on
+* use pub key instead of username and password for auth with following steps:
+1. get local pub key: cat ~/.ssh/id_rsa.pub, and copy it
+2. go to GitHub account profile, under settings, SSH and GPG keys, add it
+* create a new repo on GitHub and choose SSH as the repo link
+* use the two lines of sample scrips for pushing an existing repo
+* push further change: "git Add -A", "git commit -m 'xxx'", and "git push"
+
+## Publish to Heroku
+* as Heroku does not support sqlite3, check its gem is in dev group in Gemfile
+* add a production group in Gemfile, and add gem 'pg' within this group
+* update Gemfile.lock with: bundle install --without production
+* verify the installation of Heroku: heroku --version
+* login Heroku and create an app: "heroku login" and "heroku create"
+* make sure local change is committed and pushed to remote GitHub repo 
