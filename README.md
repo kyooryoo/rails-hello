@@ -164,3 +164,115 @@ user.errors.full_messages
 user = User.new(username: "a", email: "b")
 user.save
 user.errors.full_messages
+
+## manually build the UI for data access
+* if use scaffold generation, then the work is done automatically
+1. add one line of code into routes.rb in config: resources :users
+* this one line code above add many default paths into routes
+* use "rails routes" before and after adding this code to check the change
+2. go to http://localhost:3000/users/new to check the error about the Controller
+3. create "users_controller.rb" controller file within app/controllers folder
+class UsersController < ApplicationController
+  def new
+    @user = User.new
+  end
+end
+4. go to http://localhost:3000/users/new to check the error of missing templates
+5. create "new.html.erb" within newly created "users" folder in "views" folder
+<h1>Create a User</h1>
+6. go to http://localhost:3000/users/new to check the page works somehow
+7. add following code into "new.html.erb" to create a form for data input:
+<%= form_for @user do |f| %>
+  <p>
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+  </p>
+
+  <p>
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </p>
+
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+8. go to http://localhost:3000/users/new to check the page has a form now
+9. click the "Create User" to check the error
+10. go to "users_controller.rb" and add a place holder "create" method:
+def create
+  render plain: params[:user].inspect
+end
+11. go to users/new page to submit the form and check the data passed in
+12. update the create method in users controller:
+def create
+  #render plain: params[:user].inspect
+  @user = User.new(user_params)
+  @user.save
+end
+13. still within users controller, create a method to whitelist input params
+private
+  def user_params
+    params.require(:user).permit(:username, :email)
+  end
+14. go to http://localhost:3000/users/new and submit some data
+15. go to rails console check data input was successful with: User.all
+* there is no template defined for create, so nothing to show after data input
+16. check routes: rails routes, there is a user#show action with prefix user
+* use the controller#action, and prefix_path to create the show after data input
+17. Update the create action in user controller with:
+def create
+  @user = User.new(user_params)
+  if @user.save
+    redirect_to user_path(@user)
+  else
+    render :new
+  end
+end
+* we use if to check if data input pass the validation or not
+* if it passes, we redirect to another view to show the created user
+* if not, we render the new page with the form for user input again
+18. user_path direct to user#show action, so we need to create a show method:
+def show
+  @user = User.find(params[:id])
+end
+* this action will pass target user to the view of "show"
+* params of id could be used here because of URL Pattern, check rails routes
+19. create "show.html.erb" to show the created user in "views/user" folder:
+<h1>Showing selected user</h1>
+<p>Username: <%= @user.username %></p>
+<p>Email: <%= @user.email %></p>
+* this view catches the user object from controller and display its attributes
+
+## improve the usability
+1. show some notice after new user is created, update create action as follows:
+def create
+  @user = User.new(user_params)
+  if @user.save
+    flash[:notice] = "New user created!"
+    redirect_to user_path(@user)
+  else
+    render :new
+  end
+end
+* this newly added flash should be handled somewhere
+2. go to app/views/layouts/application.html.erb and update the body tag:
+<body>
+  <% flash.each do |name, msg| %>
+    <ul>
+      <li><%= msg %></li>
+    </ul>
+  <% end %>
+  <%= yield %>
+</body>
+* this file wrap any view and will handle the flash message
+3. next, add code in "new" view to display data input validation errors
+<% if @user.errors.any? %>
+<h2>Following errors happened!</h2>
+<ul>
+  <% @user.errors.full_messages.each do |msg| %>
+  <li><%= msg %></li>
+  <% end %>
+</ul>
+<% end %>
+4. test creating a new user or making some errors
