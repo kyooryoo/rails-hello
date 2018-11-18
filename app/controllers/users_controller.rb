@@ -13,6 +13,9 @@ class UsersController < ApplicationController
   def edit
   end
 
+  # the submit buttonin of the form in new page will trigger create action
+  # this is a default feature provided by rails, not need to specify manually
+  # you can test without having this action defined to find it out
   def create
     @user = User.new(user_params)
     if @user.save

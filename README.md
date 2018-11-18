@@ -620,3 +620,204 @@ git push heroku master
 heroku run rails db:migrate
 ```
 * after pushing to heroku, the last command creates the database on heroku
+
+## styling the Application
+1. install `bootstrap` and have some basic configuration:
+2. update Gemfile by adding:
+```
+gem 'bootstrap-sass', '~> 3.3.7'
+```
+above
+```
+gem 'sass-rails',   '5.0.6'
+```
+3. run: ```bundle install```
+4. create `custom.css.scss` within `app/assets/stylesheets` with:
+```
+@import "bootstrap-sprockets";
+@import "bootstrap";
+```
+5. update `applications.js` within `app/assets/javascripts` with:
+```
+//= require rails-ujs
+//= require jquery
+//= require bootstrap-sprockets
+//= require turbolinks
+//= require_tree
+```
+6. restart the server to see the change of style
+
+## add navigation to every page
+1. add navigation render code to the top of `body` tag of `application` layout
+```
+<%= render 'layouts/navigation' %>
+```
+* the `application` layout file is located in `app/views/layouts`
+2. create `navigation` partial file in the layouts folder:
+* go to https://getbootstrap.com/docs/3.3/components/#navbar copy the code
+* the file name for the partial file should be `_navigation.html.erb`
+3. back to home page of the server, refresh to check the default nav bar
+4. add following code on top of `custom.css.scss` file:
+```
+$navbar-default-bg: black;
+```
+5. remove static active effect: remove `class="active"` in nav bar file line 17
+6. modify `Brand` to `Hello World` in nav bar file line 11
+7. further style the brand with updating the brand code line 11 with:
+```
+<a class="navbar-brand" id="logo" href="#">Hello World</a>
+```
+8. add following code at the bottom of the `custom.css.scss` file:
+```
+#logo {
+  float: left;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  font-weight: bold;
+}
+
+#logo:hover {
+  color: #fff;
+  text-decoration: none;
+}
+```
+9. update the link of the brand to site home page by modifying line 11 to:
+```
+<%= link_to "Hello World", root_path, class: "navbar-brand", id: "logo" %>
+```
+10. similarly, update other links on nav bar and dropdown list:
+* update line 17 and line 18 of two main nav bar links with:
+```
+<li><%= link_to "Articles", articles_path %></li>
+<li><%= link_to "Users", users_path %></li>
+```
+* update `Dropdown` with `Actions` on line 20, and top two links with:
+```
+<li><%= link_to "New Article", new_article_path %></li>
+<li><%= link_to "New User", new_user_path %></li>
+```
+* update another main nav bar link on line 39 with:
+```
+<li><%= link_to "About", about_path %></li>
+```
+
+## revise the home page with a jumbotron:
+1. go to https://getbootstrap.com/docs/3.3/components/#jumbotron
+* copy and paste the code to `home.html.erb` in `app/views/welcome/`
+* modify the text body somehow
+```
+<div class="jumbotron">
+  <h1>Hello, world!</h1>
+  <p>This is a hello world Rails application for learning Ruby on Rails.</p>
+  <p><%= link_to "Learn more", about_path, class: "btn btn-danger btn-lg" %></p>
+</div>
+```
+2. refresh the site home page to check the current result
+3. for adding some space between components on the page body:
+* wrap the `<%= yield %>` in application layout with following div:
+```
+<div class="container">
+  <%= yield %>
+</div>
+```
+4. for center align text, add a center class in `custom.css.scss` file:
+```
+.center {
+  text-align: center;
+}
+```
+* then update the `class` attribute of `jumbotron` in home page to:
+```
+<div class="center jumbotron">
+```
+5. refresh the site home page to check the result
+6. download a theme image `ruby-on-rails.jpg` and save in `app/assets/images`
+7. update `custom.css.scss` by adding following class definitions:
+```
+.jumbotron {
+  background-image: asset-url('ruby-on-rails.jpg');
+  background-size: cover;
+  height: 550px;
+  padding-top: 10px;
+}
+
+.jumbotron h1{
+  color: #fff;
+  margin-bottom: 30px;
+  letter-spacing: -1px;
+  font-weight: bold;
+}
+
+.jumbotron p{
+  color: #fff;
+}
+```
+8. add another `#btn-home` id and apply it to the `Learn more` button
+```
+#btn-home {
+  font-size: 1.2em;
+  margin-top: 290px;
+  color: white;
+}
+```
+* update the `Learn more` button with this newly defined "btn-home" id:
+```
+<p><%= link_to "Learn more", about_path, class: "btn btn-danger btn-lg", id: "btn-home" %></p>
+```
+9. refresh the site home page to see the result of adjustment
+
+## add footer to the home page
+1. add the render code to the end of the body tag in `application.html.erb`
+```
+<%= render 'layouts/footer' %>
+```
+2. create `_footer.html.erb` partial file in `app/views/layouts`
+```
+<div class="container">
+  <footer class="footer">
+    <small>
+      Copyright &copy; <a href="https://github.com/your-repo">Your Project</a>
+      by <a href="https://your-website/">Your Name</a>
+    </small>
+    <nav>
+      <ul>
+        <li><%= link_to 'Articles', articles_path %></li>
+        <li><%= link_to 'Users', users_path %></li>
+        <li><%= link_to 'About', about_path %></li>
+      </ul>
+    </nav>
+  </footer>
+</div>
+```
+3. create following footer style definitions in `custom.css.scss`
+```
+footer {
+  text-align: right;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid #eaeaea;
+  color: #777;
+}
+
+footer a:hover {
+  color: #222;
+  background-color: white;
+}
+
+footer small {
+  float: left;
+}
+
+footer ul {
+  float: right;
+  list-style: none;
+}
+
+footer ul li {
+  float: left;
+  margin-left: 15px;
+}
+```
+4. refresh the home page to check the final result
