@@ -14,7 +14,6 @@
 
 ## Create some pages
 * run the rails server with: rails server
-
 * go to http://localhost:3000/welcome/home, confirm the page does not exist
 * next steps will create a "welcome" controller with a "home" action
 * check currently available routes with: rails routes
@@ -28,13 +27,14 @@
 * go to "views" folder and create a "welcome" folder with "home.html.erb"
 * Input a H1 tag in the file: <h1>This is the Welcome homepage</h1>
 * go to http://localhost:3000/welcome/home, confirm the page now works
-
 * follow the same steps above to create a "about" page
 * go to http://localhost:3000/welcome/about, confirm the about page works
 
 ## Create some links
 * go to "home.html.erb" and add a line to Home page with following code:
+```
 <%= link_to 'Home', welcome_home_path %>
+```
 * here, the <% and %> starts and ends the ruby code within html templates
 * the = following the <% ask rails to render the ruby code after evaluation
 * the 'Home' is the text content of the link that is shown to the user
@@ -239,11 +239,9 @@ end
 * this action will pass target user to the view of "show"
 * params of id could be used here because of URL Pattern, check rails routes
 19. create "show.html.erb" to show the created user in "views/user" folder:
-```
 <h1>Showing selected user</h1>
 <p>Username: <%= @user.username %></p>
 <p>Email: <%= @user.email %></p>
-```
 * this view catches the user object from controller and display its attributes
 
 ## improve the usability
