@@ -16,7 +16,6 @@ rails new <new_app>
 ```
 
 ## Intro to MVC
-<<<<<<< HEAD
 * rails uses `Model`, `View`, and `Controller`, the `MVC` web dev framework
 * user http request is handled by `router`, then distributed to `controller`
 * `controller` generate the `view` or after interaction with `models`
@@ -617,4 +616,7 @@ before_action :set_user, only: [:edit, :update, :show, :destroy]
 git status
 git add -A
 git commit -m "added user pages"
+git push heroku master
+heroku run rails db:migrate
 ```
+* after pushing to heroku, the last command creates the database on heroku
