@@ -239,9 +239,11 @@ end
 * this action will pass target user to the view of "show"
 * params of id could be used here because of URL Pattern, check rails routes
 19. create "show.html.erb" to show the created user in "views/user" folder:
-```<h1>Showing selected user</h1>
+```
+<h1>Showing selected user</h1>
 <p>Username: <%= @user.username %></p>
-<p>Email: <%= @user.email %></p>```
+<p>Email: <%= @user.email %></p>
+```
 * this view catches the user object from controller and display its attributes
 
 ## improve the usability
