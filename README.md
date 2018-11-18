@@ -239,9 +239,9 @@ end
 * this action will pass target user to the view of "show"
 * params of id could be used here because of URL Pattern, check rails routes
 19. create "show.html.erb" to show the created user in "views/user" folder:
-<h1>Showing selected user</h1>
+```<h1>Showing selected user</h1>
 <p>Username: <%= @user.username %></p>
-<p>Email: <%= @user.email %></p>
+<p>Email: <%= @user.email %></p>```
 * this view catches the user object from controller and display its attributes
 
 ## improve the usability
@@ -408,4 +408,7 @@ end
 2. apply set_user action to related actions in users controller on top:
 before_action :set_user, only: [:edit, :update, :show, :destroy]
 3. remove the set_user code from the actions of edit, update, show, and destroy
-4. test the final effect
+4. test the final effect, git push the repo, then deploy to heroku
+git status
+git add -A
+git commit -m "added user pages"
