@@ -276,3 +276,136 @@ end
 </ul>
 <% end %>
 4. test creating a new user or making some errors
+
+## add edit feature
+1. check rails routes for Prefix, URI Pattern, and Control#Action for user edit
+* follow URI Pattern to go to http://localhost:3000/users/1/edit check the error
+2. go to user controller and create a place holder action of edit:
+def edit
+end
+* go to http://localhost:3000/users/1/edit check the new error
+3. create "edit.html.erb" in app/views/users with a simple head:
+<h1>Edit existing user</h1>
+* next steps will use some code from the previous section to fulfill this one
+4. update edit action in user controller with the same code for show action:
+def edit
+  @user = User.find(params[:id])
+end
+* this find the user with the id params from URI pattern and pass it to view
+5. update the edit view with the same code from the show view:
+<% if @user.errors.any? %>
+<h2>Following errors happened!</h2>
+<ul>
+  <% @user.errors.full_messages.each do |msg| %>
+  <li><%= msg %></li>
+  <% end %>
+</ul>
+<% end %>
+
+<%= form_for @user do |f| %>
+  <p>
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+  </p>
+
+  <p>
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </p>
+
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+* this view shows the detail attributes of the user passed from edit action
+6. click the update button in the form of edit page to check its error
+* here, the error says we need to create an update action for users controller
+7. create an update action in users controller by reusing some code:
+def update
+  @user = User.find(params[:id])
+  if @user.update(user_params)
+    flash[:notice] = "User updated!"
+    redirect_to user_path(@user)
+  else
+    render :edit
+  end
+end
+8. go to http://localhost:3000/users/1/edit to check the feature is working
+
+## add the feature to show all existing users
+1. check rails routes for the prefix, URI, and controller#action for user index
+* this is the home page for users, which shows all existing users
+2. create index action in users controller as follows:
+def index
+  @users = User.all
+end
+3. create "index.html.erb" view in app/views/users with following code:
+<h1>Listing all users</h1>
+
+<p><%= link_to "Create new user", new_user_path %></p>
+
+<table>
+  <tr>
+    <th>User Name</th>
+    <th>Email</th>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.username %></td>
+      <td><%= user.email %></td>
+      <td><%= link_to 'Edit', edit_user_path(user) %></td>
+      <td><%= link_to 'Show', user_path(user) %></td>
+    </tr>
+  <% end %>
+</table>
+4. check the result and add following link code to new, show, and edit view
+<%= link_to "Back to users listing", users_path %>
+* so there is a back link in the page if create, show, and edit user pages
+5. further add a link to the edit page for the show page
+<%= link_to "Edit this user", edit_user_path(@user) %>
+
+## use partial to reduce code redundancy
+1. extract the identical form in the views of show and edit into a partial form
+2. create a partial form file "_form.html.erb" in app/views/users
+* notice all partial views have prefix "_" in their names
+3. cut the code for error message and form from "new" into this partial form
+4. in "new" and "show" views, refer the partial form with: <%= render 'form' %>
+5. browsing the updated pages, should be the same as before
+6. with the same technic, extract the error message into a partial too
+7. cut the ul tag for messages from the application layout to _messages layout
+* layouts files are all located in app/views/layouts, with html.erb extention
+8. refer in the application layout with: <%= render 'layouts/messages' %>
+9. test the result by creating a new user
+
+## add the delete feature
+1. check rails routes about the DELETE verb, and the destroy action.
+2. create the destroy action in users controller:
+def destroy
+  @user = User.find(params[:id])
+  @username = @user.username
+  @user.destroy
+  flash[:notice] = "User @username was deleted!"
+  redirect_to users_path
+end
+3. add the delete link into the user list table in users index page
+<td><%= link_to 'Delete', user_path(user), method: :delete, data: {confirm: "Are you sure?"} %></td>
+* this line of code is added after the show and edit line of td
+* notice the "method: :delete" specifies the verb used
+* notice the "data" part displays a message for confirmation
+4. test the delete feature in browser
+5. add links to articles and users in the site hope pate app/views/welcome
+<h1>This is the Welcome homepage</h1>
+<%= link_to 'Articles', articles_path %> |
+<%= link_to 'Users', users_path %> |
+<%= link_to 'About', about_path %>
+
+## polish further and deploy the current project
+1. reduce code redundancy further by extracting repeated code to function:
+* create private method set_user within users controller
+def set_user
+  @user = User.find(params[:id])
+end
+2. apply set_user action to related actions in users controller on top:
+before_action :set_user, only: [:edit, :update, :show, :destroy]
+3. remove the set_user code from the actions of edit, update, show, and destroy
+4. test the final effect
