@@ -22,6 +22,5 @@ group :development do
 end
 
 group :production do
-  gem 'ruby',     '2.4.5'
   gem 'pg'
 end
