@@ -6,7 +6,7 @@
   <p><%= simple_format(@article.description) %></p>
   <div class="actions">
     <%= link_to "Edit this article", edit_article_path(@article), class: "btn btn-sm btn-primary" %>
-    <%= link_to "Delete this article", user_path(@article), method: :delete,
+    <%= link_to "Delete this article", article_path(@article), method: :delete,
       data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
     <%= link_to "View all articles", articles_path, class: "btn btn-sm btn-success" %>
   </div>

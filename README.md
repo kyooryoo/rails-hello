@@ -934,7 +934,7 @@ end
         </div>
         <div class="col-sm-4">
           <%= f.text_area :description, class: "form-control",
-            id: :article_description,placeholder: "User Email", autofocus: true %>
+            id: :article_description,placeholder: "Article Description", autofocus: true %>
         </div>
       </div>
 
@@ -1037,6 +1037,45 @@ end
 * for user `create` and `update`, use name `success`, makes message in green
 * for user `delete`, use name `danger`, makes message in red
 
+## apply style flash message to article
+1. modify scaffold generated article controller to support flash message:
+```
+class ArticlesController < ApplicationController
+  ...
+
+  def create
+    ...
+      if @article.save
+        flash[:success] = "Article was successfully created."
+        format.html { redirect_to@article }
+        format.json { render :show, status: :created, location: @article }
+      else
+      ...
+
+  def update
+    respond_to do |format|
+      if @article.update(article_params)
+        flash[:success] = "Article was successfully updated."
+        format.html { redirect_to @article }
+        format.json { render :show, status: :ok, location: @article }
+      else
+      ...
+
+  def destroy
+    @article.destroy
+    respond_to do |format|
+      flash[:danger] = "Article was successfully destroyed."
+      format.html { redirect_to articles_url }
+      format.json { head :no_content }
+    end
+  end
+
+  ...
+end
+
+```
+* test the result by create, modify, and delete articles
+
 ## style the show page
 1. update the show page of user as follows:
 ```
@@ -1080,7 +1119,7 @@ h1, h2, h4 {
   <p><%= simple_format(@article.description) %></p>
   <div class="actions">
     <%= link_to "Edit this article", edit_article_path(@article), class: "btn btn-sm btn-primary" %>
-    <%= link_to "Delete this article", user_path(@article), method: :delete,
+    <%= link_to "Delete this article", article_path(@article), method: :delete,
       data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
     <%= link_to "View all articles", articles_path, class: "btn btn-sm btn-success" %>
   </div>
