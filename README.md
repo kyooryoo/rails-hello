@@ -333,7 +333,7 @@ end
 4. go to http://localhost:3000/users/new to check the error about templates
 5. create `new.html.erb` within newly created `users` folder in `views` folder
 ```
-<h1>Create a User</h1>
+<h2>New User</h2>
 ```
 6. go to http://localhost:3000/users/new to check the page works somehow
 7. add following code into `new.html.erb` to create a form for data input:
@@ -407,7 +407,7 @@ end
 * params of `id` could be used here because of `URL Pattern`, check rails routes
 19. create `show.html.erb` to show the created user in `views/user` folder:
 ```
-<h1>Showing selected user</h1>
+<h2>Showing selected user</h2>
 <p>Username: <%= @user.username %></p>
 <p>Email: <%= @user.email %></p>
 ```
@@ -463,7 +463,7 @@ end
 * go to http://localhost:3000/users/1/edit check the new error
 3. create `edit.html.erb` in app/views/users with a simple head:
 ```
-<h1>Edit existing user</h1>
+<h2>Edit User</h2>
 ```
 * next steps will use some code from the previous section to fulfill this one
 4. update `edit` action in user controller with the same code for show action:
@@ -528,7 +528,7 @@ end
 ```
 3. create `index.html.erb` view in `app/views/users` with following code:
 ```
-<h1>Listing all users</h1>
+<h2>Listing all users</h2>
 
 <p><%= link_to "Create new user", new_user_path %></p>
 
@@ -716,57 +716,65 @@ $navbar-default-bg: black;
 ```
 2. refresh the site home page to check the current result
 3. for adding some space between components on the page body:
-* wrap the `<%= yield %>` in application layout with following div:
+* wrap the `body` tag in application layout with `container` class:
 ```
-<div class="container">
-  <%= yield %>
-</div>
+<body class="container">
+    <%= render 'layouts/navigation' %>
+    ...
+</body>
 ```
-4. for center align text, add a center class in `custom.css.scss` file:
+4. polish the `h1` and `p` tags in the `jumbotron` container on home page:
 ```
-.center {
+.jumbotron h1 {
+  color: #fff;
+  letter-spacing: -1px;
+  font-weight: bold;
+}
+
+.jumbotron p {
   text-align: center;
+  margin-top: 100px;
+  color: #fff;
+  font-weight: bold;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
 }
 ```
-* then update the `class` attribute of `jumbotron` in home page to:
+* the margin-bottom definition of `h1` will apply to all `h1` tags
+5. polish the `Learn more` button in the `jumbotron` container on home page:
 ```
-<div class="center jumbotron">
+#btn-home {
+  text-align: right;
+  margin-top: 100px;
+}
+
+#btn-home a {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: white;
+}
 ```
-5. refresh the site home page to check the result
+* update the html code of the `Learn more` button accordingly:
+```
+<p id="btn-home">
+  <%= link_to "Learn more", about_path, class: "btn btn-danger btn-lg" %>
+</p>
+```
 6. download a theme image `ruby-on-rails.jpg` and save in `app/assets/images`
 7. update `custom.css.scss` by adding following class definitions:
 ```
 .jumbotron {
   background-image: asset-url('ruby-on-rails.jpg');
   background-size: cover;
-  height: 550px;
+  background-position: center;
+  height: 400px;
   padding-top: 10px;
 }
-
-.jumbotron h1{
-  color: #fff;
-  margin-bottom: 30px;
-  letter-spacing: -1px;
-  font-weight: bold;
-}
-
-.jumbotron p{
-  color: #fff;
-}
 ```
-8. add another `#btn-home` id and apply it to the `Learn more` button
-```
-#btn-home {
-  font-size: 1.2em;
-  margin-top: 290px;
-  color: white;
-}
-```
-* update the `Learn more` button with this newly defined "btn-home" id:
-```
-<p><%= link_to "Learn more", about_path, class: "btn btn-danger btn-lg", id: "btn-home" %></p>
-```
-9. refresh the site home page to see the result of adjustment
+8. refresh the site home page to see the result of adjustment
 
 ## add footer to the home page
 1. add the render code to the end of the body tag in `application.html.erb`
@@ -775,21 +783,19 @@ $navbar-default-bg: black;
 ```
 2. create `_footer.html.erb` partial file in `app/views/layouts`
 ```
-<div class="container">
-  <footer class="footer">
-    <small>
-      Copyright &copy; <a href="https://github.com/your-repo">Your Project</a>
-      by <a href="https://your-website/">Your Name</a>
-    </small>
-    <nav>
-      <ul>
-        <li><%= link_to 'Articles', articles_path %></li>
-        <li><%= link_to 'Users', users_path %></li>
-        <li><%= link_to 'About', about_path %></li>
-      </ul>
-    </nav>
-  </footer>
-</div>
+<footer class="footer">
+  <small>
+    Copyright &copy; <a href="https://github.com/your-repo">Your Project</a>
+    by <a href="https://your-website/">Your Name</a>
+  </small>
+  <nav>
+    <ul>
+      <li><%= link_to 'Articles', articles_path %></li>
+      <li><%= link_to 'Users', users_path %></li>
+      <li><%= link_to 'About', about_path %></li>
+    </ul>
+  </nav>
+</footer>
 ```
 3. create following footer style definitions in `custom.css.scss`
 ```
@@ -799,6 +805,7 @@ footer {
   padding-top: 5px;
   border-top: 1px solid #eaeaea;
   color: #777;
+  clear: both;
 }
 
 footer a:hover {
@@ -820,4 +827,356 @@ footer ul li {
   margin-left: 15px;
 }
 ```
+* `clear: both` setting guarantees `footer` stays at the page bottom
 4. refresh the home page to check the final result
+
+## style the form from template
+1. go to https://getbootstrap.com/docs/3.3/css/#forms-horizontal
+* do not copy and paste code this time, but only reuse some code here
+2. update the `_form.html.erb` partial file `in app/views/users`
+* wrap the form part code with two following `div`s
+```
+<div class='row'>
+  <div class='col-xs-12'>
+    <%= form_for @user do |f| %>
+      ...
+    <% end %>
+  </div>
+</div>
+```
+3. update the form part code with following:
+```
+<%= form_for(@user, :html => {class: "form-horizontal", role: "form"}) do |f| %>
+
+<div class="form-group">
+  <div class="col-sm-1 control-label col-sm-offset-3">
+    <%= f.label :username %>
+  </div>
+  <div class="col-sm-4">
+    <%= f.text_field :username, class: "form-control", placeholder: "User Name", autofocus: true %>
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-1 control-label col-sm-offset-3">
+    <%= f.label :email %>
+  </div>
+  <div class="col-sm-4">
+    <%= f.text_field :email, class: "form-control", placeholder: "User Email", autofocus: true %>
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-offset-4 col-sm-4">
+    <%= f.submit class: "btn btn-primary btn-lg"%>
+  </div>
+</div>
+
+<% end %>
+
+<div class="col-sm-offset-4 col-sm-4">
+  [ <%= link_to "Cancel request and return to users listing", users_path %> ]
+</div>
+```
+4. update the `new` view in `app/views/users` with
+```
+<h2>New User</h2>
+<%= render 'form' %>
+```
+5. update the `edit` view in `app/views/users` with
+```
+<h2>Edit User</h2>
+<%= render 'form' %>
+```
+6. refresh the `new` and `edit` user view to see the result
+
+## polish the article pages
+* article pages are generated by scaffold, modify them with following steps:
+1. add data validation to `article.rb` model file at `app/models`
+```
+class Article < ApplicationRecord
+  validates :title, presence: true, length: { minimum: 3, maximum: 50 }
+  validates :description, presence: true, length: { minimum: 10, maximum: 300 }
+end
+```
+2. update the partial form file `_form.html.erb` in `app/views/articles` with:
+```
+<div class='row'>
+  <div class='col-sm-12'>
+    <%= form_with(model: article, local: true, class: "form-horizontal", role: "form") do |f| %>
+      <% if article.errors.any? %>
+        <div class="col-sm-offset-4 col-sm-4" id="error_explanation">
+          <h2><%= pluralize(article.errors.count, "error") %>
+            prohibited this article from being saved:
+          </h2>
+
+          <ul>
+          <% article.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group field">
+        <div class="col-sm-1 control-label col-sm-offset-3">
+          <%= f.label :title %>
+        </div>
+        <div class="col-sm-4">
+          <%= f.text_field :title, class: "form-control", id: :article_title,
+            placeholder: "Article Title", autofocus: true %>
+        </div>
+      </div>
+
+      <div class="form-group field">
+        <div class="col-sm-1 control-label col-sm-offset-3">
+          <%= f.label :description %>
+        </div>
+        <div class="col-sm-4">
+          <%= f.text_area :description, class: "form-control",
+            id: :article_description,placeholder: "User Email", autofocus: true %>
+        </div>
+      </div>
+
+      <div class="form-group action">
+        <div class="col-sm-offset-4 col-sm-4">
+          <%= f.submit class: "btn btn-primary btn-lg"%>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+```
+3. update the `new` view of article with:
+```
+<h2>New Article</h2>
+<%= render 'form', article: @article %>
+<div class='row col-sm-12 col-sm-offset-4'>
+  [ <%= link_to 'Cancel request and return to article listing', articles_path %> ]
+</div>
+```
+4. update the `edit` view of article with:
+```
+<h2>Edit Article</h2>
+<%= render 'form', article: @article %>
+<div class='row col-sm-12 col-sm-offset-4'>
+  [ <%= link_to 'Cancel request and return to article listing', articles_path %> ]
+</div>
+```
+
+## polish and extract error messages
+1. create a partiql file `errors.html.erb` within `app/views/shared` folder
+```
+<% if @user.errors.any? %>
+<div class="col-sm-offset-4 col-sm-5">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h2 class="panel-title">
+        <%= pluralize(@user.errors.count, "error")%>
+        prohibited this user from being saved:
+      </h2>
+    </div>
+    <div class="panel-body">
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+<% end %>
+```
+* this code adapt the original error message code to the grid template
+2. notice there are specific object type of user in the partial code above
+* replace `@user` with `obj` to make this partial code general for all use
+2. update the user `_form.html.erb` partial file to:
+```
+<div class='row'>
+  <div class='col-sm-12'>
+
+    <% render 'shared/errors', obj: @user %>
+
+    <%= form_for(@user, :html => {class: "form-horizontal", role: "form"}) do |f| %>
+    ...
+  </div>
+</div>
+```
+3. do the same thing to article `_form.html.erb` partial file
+```
+<div class='row'>
+  <div class='col-sm-12'>
+
+    <% render 'shared/errors', obj: @article %>
+
+    <%= form_with(model: article, local: true, class: "form-horizontal", role: "form") do |f| %>
+    ...
+  </div>
+</div>
+```
+4. notice the form was rendered with different method in user and article views
+* article one is scaffold generated, while user version is created manually
+
+## polish general flash message
+1. update the `_messages.html.erb` partial file as follows:
+```
+<div class="row">
+  <div class="col-sm-10 col-sm-offset-1">
+    <% flash.each do |name, msg| %>
+    <div class='alert alert-<%="#{name}" %>'>
+      <a href="#" class="close" data-dismiss="alert">&#215;</a>
+      <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+    <div>
+    <% end %>
+  </div>
+</div>
+```
+* flash message and name are passed in with `flash[:success] = "User updated!"`
+* here the `success` is its `name` and `User updated!` is the `message`
+2. For using the flash `name` effectively, modify user controller as follows:
+* for user `create` and `update`, use name `success`, makes message in green
+* for user `delete`, use name `danger`, makes message in red
+
+## style the show page
+1. update the show page of user as follows:
+```
+<h2>User: <%= @user.username %></h2>
+
+<div class="well col-sm-4 col-sm-offset-4">
+  <h4>Email</h4>
+  <hr>
+  <p><%= simple_format(@user.email) %></p>
+  <div class="actions">
+    <%= link_to "Edit this user", edit_user_path(@user), class: "btn btn-sm btn-primary" %>
+    <%= link_to "Delete this user", user_path(@user), method: :delete,
+      data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
+    <%= link_to "View all users", users_path, class: "btn btn-sm btn-success" %>
+  </div>
+</div>
+```
+2. update the style for `h2` and `h4` in `custom.css.scss`
+```
+h1, h2, h4 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+```
+3. define the class `.action` in `custom.css.scss`
+```
+.actions {
+  border-top: 1px solid #eaeaea;
+  padding-top: 15px;
+}
+```
+* this code adds a dim border on top of the actions for user
+4. resue codes above to style the show page for article
+```
+<h2>Article: <%= @article.title %></h2>
+
+<div class="well col-sm-8 col-sm-offset-2">
+  <h4>Description</h4>
+  <hr>
+  <p><%= simple_format(@article.description) %></p>
+  <div class="actions">
+    <%= link_to "Edit this article", edit_article_path(@article), class: "btn btn-sm btn-primary" %>
+    <%= link_to "Delete this article", user_path(@article), method: :delete,
+      data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
+    <%= link_to "View all articles", articles_path, class: "btn btn-sm btn-success" %>
+  </div>
+</div>
+```
+5. polish the nav bar here a little by adding following code:
+```
+.navbar-default .navbar-nav > li > a {
+    color: #ccc;
+}
+.navbar-default .navbar-nav > li > a:hover {
+    color: #f99;
+}
+```
+
+## layout the list page
+1. update the `index` view of user as follows:
+```
+<h2>Users</h2>
+<% @users.each do |user| %>
+<div class="row">
+  <div class="well well-lg col-sm-4 col-sm-offset-4">
+    <div class="user-name">
+      <%= link_to user.username, user_path(user) %>
+    </div>
+    <div class="user-email">
+      <%= user.email %>
+    </div>
+    <div class="actions">
+      <%= link_to "Edit this user", edit_user_path(user), class: "btn btn-sm btn-primary" %>
+      <%= link_to "Delete this user", user_path(user), method: :delete,
+        data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
+    </div>
+  </div>
+</div>
+<% end %>
+```
+2. create the `.user-name` and `.user-email` class in `custom.css.scss`:
+```
+.user-name {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.user-email {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+```
+3. following the similar steps above to style the `index` view of article
+```
+<h2>Articles</h2>
+<% @articles.each do |article| %>
+<div class="row">
+  <div class="well well-lg col-sm-8 col-sm-offset-2">
+    <div class="article-title">
+      <%= link_to article.title, article_path(article) %>
+    </div>
+    <div class="article-description">
+      <%= article.description %>
+    </div>
+    <div class="actions">
+      <%= link_to "Edit this article", edit_article_path(article), class: "btn btn-sm btn-primary" %>
+      <%= link_to "Delete this article", article_path(article), method: :delete,
+        data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
+    </div>
+  </div>
+</div>
+<% end %>
+```
+* and update the `custom.css.scss` file:
+```
+.user-name, .article-title {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.user-email, .article-description {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+```
+
+
+## minor layout fix of forms
+* add some padding to the bottom of forms:
+1. add `.form` class to the `custom.css.scss`:
+```
+.form {
+  padding-bottom: 20px;
+}
+```
+2. apply this class to the partial form for user and article:
+```
+<div class='row form'>
+  <div class='col-sm-12'>
+    ...
+  </div>
+</div>
+```

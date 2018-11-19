@@ -1,14 +1,13 @@
-<p id="notice"><%= notice %></p>
+<h2>Article: <%= @article.title %></h2>
 
-<p>
-  <strong>Title:</strong>
-  <%= @article.title %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @article.description %>
-</p>
-
-<%= link_to 'Edit', edit_article_path(@article) %> |
-<%= link_to 'Back', articles_path %>
+<div class="well col-sm-8 col-sm-offset-2">
+  <h4>Description</h4>
+  <hr>
+  <p><%= simple_format(@article.description) %></p>
+  <div class="actions">
+    <%= link_to "Edit this article", edit_article_path(@article), class: "btn btn-sm btn-primary" %>
+    <%= link_to "Delete this article", user_path(@article), method: :delete,
+      data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
+    <%= link_to "View all articles", articles_path, class: "btn btn-sm btn-success" %>
+  </div>
+</div>

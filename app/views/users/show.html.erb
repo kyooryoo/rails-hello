@@ -1,7 +1,14 @@
-<h1>Showing selected user</h1>
+<h2>User: <%= @user.username %></h2>
 
-<p>Username: <%= @user.username %></p>
-<p>Email: <%= @user.email %></p>
+<div class="well col-sm-6 col-sm-offset-3">
+  <h4>Email</h4>
+  <p><%= simple_format(@user.email) %></p>
+  <div class="actions">
+    <%= link_to "Edit this user", edit_user_path(@user), class: "btn btn-sm btn-primary" %>
+    <%= link_to "Delete this user", user_path(@user), method: :delete,
+      data: {confirm: "Are you sure?"}, class: "btn btn-sm btn-danger" %>
+    <%= link_to "View all users", users_path, class: "btn btn-sm btn-success" %>
+  </div>
+</div>
 
-<%= link_to "Edit this user", edit_user_path(@user) %>
-<%= link_to "Back to users listing", users_path %>
+<br>
